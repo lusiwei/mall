@@ -1,6 +1,9 @@
 package com.lusiwei.dao;
 
 import com.lusiwei.pojo.Shipping;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ShippingMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,7 @@ public interface ShippingMapper {
     int updateByPrimaryKeySelective(Shipping record);
 
     int updateByPrimaryKey(Shipping record);
+
+
+    List<Shipping> queryListByUserId(@Param("userId") int userId);
 }

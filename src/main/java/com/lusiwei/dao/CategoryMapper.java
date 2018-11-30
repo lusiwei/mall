@@ -1,6 +1,9 @@
 package com.lusiwei.dao;
 
 import com.lusiwei.pojo.Category;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,14 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+    /**
+     * @param categoryId id
+     * @return Category
+     */
+    List<Category> selectByParentId(@Param("categoryId") int categoryId);
+
+    int updateByCategoryId(@Param("categoryId") int categoryId, @Param("categoryName") String categoryName);
+
+    int queryParentIdByCategoryId(Integer categoryId);
 }

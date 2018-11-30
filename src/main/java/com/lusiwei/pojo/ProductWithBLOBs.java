@@ -1,5 +1,6 @@
 package com.lusiwei.pojo;
 
+
 public class ProductWithBLOBs extends Product {
     private String subImages;
 

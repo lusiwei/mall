@@ -19,7 +19,15 @@
     from mmall_category
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByParentId" resultType="com.lusiwei.pojo.Category">
+      select
+      <include refid="Base_Column_List"/>
+      from mmall_category where parent_id=#{categoryId}
+    </select>
+    <select id="queryParentIdByCategoryId" resultType="java.lang.Integer">
+      select parent_id from mmall_category where id=#{categoryId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_category
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -114,4 +122,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <update id="updateByCategoryId">
+        update mmall_category
+        set name=#{categoryName} where id=#{categoryId}
+    </update>
 </mapper>

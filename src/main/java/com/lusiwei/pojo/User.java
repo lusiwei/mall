@@ -1,7 +1,16 @@
 package com.lusiwei.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.Date;
 
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Integer id;
 

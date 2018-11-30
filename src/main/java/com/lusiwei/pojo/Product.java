@@ -1,9 +1,18 @@
 package com.lusiwei.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Product {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product implements Serializable {
     private Integer id;
 
     private Integer categoryId;
@@ -20,8 +29,10 @@ public class Product {
 
     private Integer status;
 
+    @JSONField(format = "yyyy-MM-dd")
     private Date createTime;
 
+    @JSONField(format = "yyyy-MM-dd")
     private Date updateTime;
 
     public Integer getId() {
@@ -75,6 +86,7 @@ public class Product {
     public Integer getStock() {
         return stock;
     }
+
 
     public void setStock(Integer stock) {
         this.stock = stock;
