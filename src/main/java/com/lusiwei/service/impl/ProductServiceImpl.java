@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseResult queryList(String keyword, Integer categoryId, String orderBy, int pageNum, int pageSize) {
         pageNum = pageNum <= 0 ? 1 : pageNum;
-        pageSize = (pageSize <= 0 || pageSize>10) ? 10 : pageSize;
+        pageSize = (pageSize <= 0 || pageSize>10) ? 5 : pageSize;
         PageHelper.startPage(pageNum, pageSize,true);
         List<Product> productList = productMapper.queryList(keyword, categoryId, orderBy);
         List<ProductDto> productDtoList = new ArrayList<>();

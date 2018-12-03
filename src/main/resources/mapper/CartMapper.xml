@@ -35,6 +35,11 @@
     <select id="queryCountByUserId" resultType="java.lang.Integer">
         select sum(quantity) from mmall_cart where user_id=#{userId}
     </select>
+    <select id="selectCheckedCartByUserId" resultType="com.lusiwei.pojo.Cart">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_cart where user_id=#{userId} and checked=1
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmall_cart
     where id = #{id,jdbcType=INTEGER}

@@ -18,6 +18,7 @@ public enum ResponseCode {
     USERNAME_ERROR(1,"用户名错误"),
     PASSWORD_ERROR(1, "密码错误"),
     UNLOGIN(10,"未登录"),
+    ON_SALE(1, "在售"),
     ;
     private final int code;
     private final String desc;

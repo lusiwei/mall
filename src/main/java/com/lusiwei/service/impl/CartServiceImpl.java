@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ResponseResult queryCount(Integer userId) {
-        int count=cartMapper.queryCountByUserId(userId);
+        Integer count=cartMapper.queryCountByUserId(userId);
         return ResponseResult.createSuccessResponse(count);
     }
 
