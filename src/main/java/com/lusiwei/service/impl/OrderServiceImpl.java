@@ -10,7 +10,7 @@ import com.lusiwei.exception.MyException;
 import com.lusiwei.pojo.*;
 import com.lusiwei.service.OrderService;
 import com.lusiwei.util.BigDecimalUtil;
-import com.lusiwei.util.DateToString;
+import com.lusiwei.util.Date2String;
 import com.lusiwei.util.PropertiesUtil;
 import com.lusiwei.vo.OrderItemVo;
 import com.lusiwei.vo.OrderProductVo;
@@ -172,6 +172,12 @@ public class OrderServiceImpl implements OrderService {
         return ResponseResult.createSuccessResponse(pageInfo);
     }
 
+    @Override
+    public ResponseResult pay(int id, Long orderNo, String qrcode) {
+
+        return null;
+    }
+
     private OrderVo getOrderVo(Order order, List<OrderItem> orderItemList) {
         OrderVo orderVo = new OrderVo();
         orderVo.setOrderNo(order.getOrderNo());
@@ -187,11 +193,11 @@ public class OrderServiceImpl implements OrderService {
         //获取shippingVo
         ShippingVo shippingVo = getShippingVo(shipping);
         orderVo.setShippingVo(shippingVo);
-        orderVo.setPaymentTime(DateToString.dateToString(order.getPaymentTime()));
-        orderVo.setSendTime(DateToString.dateToString(order.getSendTime()));
-        orderVo.setCloseTime(DateToString.dateToString(order.getCloseTime()));
-        orderVo.setEndTime(DateToString.dateToString(order.getEndTime()));
-        orderVo.setCreateTime(DateToString.dateToString(order.getCreateTime()));
+        orderVo.setPaymentTime(Date2String.date2String(order.getPaymentTime()));
+        orderVo.setSendTime(Date2String.date2String(order.getSendTime()));
+        orderVo.setCloseTime(Date2String.date2String(order.getCloseTime()));
+        orderVo.setEndTime(Date2String.date2String(order.getEndTime()));
+        orderVo.setCreateTime(Date2String.date2String(order.getCreateTime()));
 
         //组装OrderItemVo
         List<OrderItemVo> orderItemVoList = new ArrayList<>();
@@ -211,7 +217,7 @@ public class OrderServiceImpl implements OrderService {
         orderItemVo.setCurrentUnitPrice(orderItem.getCurrentUnitPrice());
         orderItemVo.setQuantity(orderItem.getQuantity());
         orderItemVo.setTotalPrice(orderItem.getTotalPrice());
-        orderItemVo.setCreateTime(DateToString.dateToString(orderItem.getCreateTime()));
+        orderItemVo.setCreateTime(Date2String.date2String(orderItem.getCreateTime()));
         return orderItemVo;
     }
 

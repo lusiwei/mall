@@ -8,8 +8,8 @@ import java.util.Date;
  * @Date: 2018/12/2 22:42
  * @Description:
  */
-public class DateToString {
-    public static String dateToString(Date date){
+public class Date2String {
+    public static String date2String(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             return sdf.format(date);

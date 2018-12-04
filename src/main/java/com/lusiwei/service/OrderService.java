@@ -10,6 +10,7 @@ import com.lusiwei.common.ResponseResult;
 public interface OrderService {
     /**
      * 创建订单
+     *
      * @param shippingId
      * @param id
      * @return
@@ -18,6 +19,7 @@ public interface OrderService {
 
     /**
      * 取消订单
+     *
      * @param userId
      * @param orderNo
      * @return
@@ -31,4 +33,6 @@ public interface OrderService {
     ResponseResult detail(int id, Long orderNo);
 
     ResponseResult list(int id, Integer pageSize, Integer pageNum);
+
+    ResponseResult pay(int id, Long orderNo, String qrcode);
 }

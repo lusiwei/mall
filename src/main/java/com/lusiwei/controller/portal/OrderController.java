@@ -71,6 +71,15 @@ public class OrderController {
             return ResponseResult.createFailResponse("用户需要登录");
         }
         return orderService.list(userDto.getId(), pageSize, pageNum);
+    }
 
+    @RequestMapping("/pay.do")
+    public ResponseResult pay(HttpSession session, Long orderNo) {
+        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+        if (userDto == null) {
+            return ResponseResult.createFailResponse("用户需要登录");
+        }
+        String qrcode = session.getServletContext().getRealPath("qrcode");
+        return orderService.pay(userDto.getId(), orderNo, qrcode);
     }
 }
