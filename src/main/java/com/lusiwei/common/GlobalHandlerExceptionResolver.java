@@ -40,7 +40,7 @@ public class GlobalHandlerExceptionResolver implements HandlerExceptionResolver 
         PrintWriter writer;
         try {
             writer = httpServletResponse.getWriter();
-            String response=JsonUtil.javaBeanToJson(responseResult);
+            String response=JsonUtil.Object2Json(responseResult);
             writer.write(response);
         } catch (IOException e) {
             e.printStackTrace();

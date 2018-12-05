@@ -50,5 +50,8 @@
         <property name="maxUploadSize" value="1000000000"/>
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
+    <!--<mvc:cors>-->
+        <!--<mvc:mapping path="/**" allowed-origins="http://image.lusiwei.com:8088" allow-credentials="true"/>-->
+    <!--</mvc:cors>-->
 </beans>
 

@@ -13,6 +13,13 @@ public class Constant {
         String CURRENT_USER = "current_user";
     }
 
+    public interface Cookie {
+        Integer COOKIE_MAXAGE=60*60*24;
+    }
+    public interface RedisLoginExpire {
+        Integer EXPIRE=30*60;
+    }
+
     public interface Cart {
 
         String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
@@ -41,10 +48,11 @@ public class Constant {
             this.code = code;
             this.desc = desc;
         }
-        public static String getDescByCode(int code){
+
+        public static String getDescByCode(int code) {
             if (code == 1) {
                 return ONLINE_PAY.getDesc();
-            }else {
+            } else {
                 return null;
             }
         }

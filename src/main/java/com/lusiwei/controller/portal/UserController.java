@@ -1,18 +1,20 @@
 package com.lusiwei.controller.portal;
 
 import com.lusiwei.common.Constant;
-import com.lusiwei.common.ResponseCode;
 import com.lusiwei.common.ResponseResult;
 import com.lusiwei.dto.UserDto;
 import com.lusiwei.exception.MyException;
 import com.lusiwei.param.RegisterParam;
 import com.lusiwei.pojo.User;
 import com.lusiwei.service.UserService;
+import com.lusiwei.util.JedisUtil;
+import com.lusiwei.util.JsonUtils;
+import com.lusiwei.util.LoginCookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpSession;
  * @Date: 2018/11/24 10:15
  * @Description:
  */
+//@CrossOrigin(origins = "http://image.lusiwei.com:8088", allowCredentials = "true")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -39,16 +42,24 @@ public class UserController {
 
     /**
      * 登录
+     *
      * @param username
      * @param password
-     * @param httpServletRequest
+     * @param httpServletResponse
      * @return
      */
     @PostMapping("login.do")
-    public ResponseResult login(String username, String password, HttpServletRequest httpServletRequest) {
+    public ResponseResult login(String username, String password, HttpServletResponse httpServletResponse, HttpSession session) {
         UserDto userDto = userService.login(username, password);
-        httpServletRequest.getSession().setAttribute(Constant.User.CURRENT_USER, userDto);
-        System.out.println(userDto);
+        if (userDto == null) {
+            return ResponseResult.createSuccessResponse("用户没有登录");
+        }
+//        String token = UUID.randomUUID().toString() + "login";
+        String token = session.getId();
+        //将生成的token添加到cookie中
+        LoginCookieUtil.addCookie(httpServletResponse, token);
+        //设置到redis中并设置过期时间
+        JedisUtil.getJedis().setex(token, Constant.RedisLoginExpire.EXPIRE, JsonUtils.object2Json(userDto));
         return ResponseResult.createSuccessResponse(userDto);
     }
 
@@ -59,7 +70,8 @@ public class UserController {
 
     @RequestMapping("get_user_info.do")
     public ResponseResult getUserInfo(HttpServletRequest httpServletRequest) {
-        UserDto user = (UserDto) httpServletRequest.getSession().getAttribute(Constant.User.CURRENT_USER);
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto user = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (user == null) {
             throw new MyException("用户未登录，无法获取当前用户信息");
         }
@@ -86,8 +98,9 @@ public class UserController {
      * 登录状态重置密码
      */
     @RequestMapping("reset_password.do")
-    public ResponseResult resetPassword(String passwordOld, String passwordNew, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult resetPassword(String passwordOld, String passwordNew, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
             return ResponseResult.createFailResponse("用户未登录");
         }
@@ -99,8 +112,9 @@ public class UserController {
      *
      */
     @RequestMapping("update_information.do")
-    public ResponseResult updateInformation(String email, String phone, String question, String answer, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult updateInformation(String email, String phone, String question, String answer, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
             return ResponseResult.createFailResponse("用户未登录");
         }
@@ -108,8 +122,9 @@ public class UserController {
     }
 
     @RequestMapping("get_information.do")
-    public ResponseResult getInformation(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult getInformation(HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
             return ResponseResult.createFailResponse("用户未登录");
         }
@@ -118,12 +133,8 @@ public class UserController {
     }
 
     @RequestMapping("logout.do")
-    public ResponseResult logout(HttpServletRequest httpServletRequest) {
-        try {
-            httpServletRequest.getSession().invalidate();
-        } catch (Exception e) {
-            throw new MyException("服务端异常");
-        }
+    public ResponseResult logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        LoginCookieUtil.removeLoginToken(httpServletRequest, httpServletResponse);
         return ResponseResult.createSuccessResponse("退出成功");
     }
 

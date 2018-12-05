@@ -4,10 +4,13 @@ import com.lusiwei.common.Constant;
 import com.lusiwei.common.ResponseResult;
 import com.lusiwei.dto.UserDto;
 import com.lusiwei.service.CartService;
+import com.lusiwei.util.JsonUtils;
+import com.lusiwei.util.LoginCookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -32,11 +35,12 @@ public class CartController {
      * @return
      */
     @RequestMapping("list.do")
-    public ResponseResult cartList(HttpSession session) {
+    public ResponseResult cartList(HttpServletRequest httpServletRequest) {
         //判断是否登录
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.getCartList(userId);
@@ -46,10 +50,11 @@ public class CartController {
      * 添加商品
      */
     @RequestMapping("add.do")
-    public ResponseResult add(Integer productId, Integer count, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult add(Integer productId, Integer count, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.add(productId, count, userId, Constant.Cart.UPDATE_TYPE_ADD);
@@ -59,10 +64,11 @@ public class CartController {
      * 更新购物车某个产品数量
      */
     @RequestMapping("update.do")
-    public ResponseResult update(Integer productId, Integer count, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult update(Integer productId, Integer count, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.add(productId, count, userId, Constant.Cart.UPDATE_TYPE_UPDATE);
@@ -72,10 +78,11 @@ public class CartController {
      * 移除购物车某个产品
      */
     @RequestMapping("delete_product.do")
-    public ResponseResult delete(String productIds, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult delete(String productIds,HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.delete(productIds, userId);
@@ -85,10 +92,11 @@ public class CartController {
      * 购物车选中某个商品
      */
     @RequestMapping("select.do")
-    public ResponseResult select(Integer productId, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult select(Integer productId, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.select(productId, Constant.Cart.PRODUCT_SELECTED, userId);
@@ -98,10 +106,11 @@ public class CartController {
      * 购物车取消选中某个商品
      */
     @RequestMapping("un_select.do")
-    public ResponseResult unSelect(Integer productId, HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult unSelect(Integer productId, HttpServletRequest httpServletRequest) {
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.select(productId,Constant.Cart.PRODUCT_UNSELECTED,userId);
@@ -110,10 +119,11 @@ public class CartController {
      * 购物车全选
      */
     @RequestMapping("select_all.do")
-    public ResponseResult selectAll(HttpSession session){
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult selectAll(HttpServletRequest httpServletRequest){
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.select(null,Constant.Cart.PRODUCT_SELECTEED_ALL, userId);
@@ -122,10 +132,11 @@ public class CartController {
      * 取消全选
      */
     @RequestMapping("un_select_all.do")
-    public ResponseResult unSelectAll(HttpSession session){
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult unSelectAll(HttpServletRequest httpServletRequest){
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.select(null,Constant.Cart.PRODUCT_UNSELECTEED_ALL, userId);
@@ -134,10 +145,11 @@ public class CartController {
      * 查询购物车里面产品的数量
      */
     @RequestMapping("get_cart_product_count.do")
-    public ResponseResult getCount(HttpSession session){
-        UserDto userDto = (UserDto) session.getAttribute(Constant.User.CURRENT_USER);
+    public ResponseResult getCount(HttpServletRequest httpServletRequest){
+        String loginInfo = LoginCookieUtil.getLoginInfo(httpServletRequest);
+        UserDto userDto = JsonUtils.string2Object(loginInfo, UserDto.class);
         if (userDto == null) {
-            return ResponseResult.createFailResponse("未登录，请先登录");
+            return ResponseResult.createFailResponse("用户未登录");
         }
         Integer userId = userDto.getId();
         return cartService.queryCount(userId);

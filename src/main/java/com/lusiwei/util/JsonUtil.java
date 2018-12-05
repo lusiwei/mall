@@ -18,7 +18,7 @@ public class JsonUtil {
      *
      * @param paramObject 需要解析的对象
      */
-    public static String javaBeanToJson(Object paramObject) {
+    public static String Object2Json(Object paramObject) {
         String json = JSON.toJSONString(paramObject);
         return json;
     }
@@ -31,7 +31,7 @@ public class JsonUtil {
      * @param paramCls  需要转换成的类
      * @return
      */
-    public static <T> T jsonToJavaBean(String paramJson, Class<T> paramCls) {
+    public static <T> T json2Object(String paramJson, Class<T> paramCls) {
         T t = null;
         try {
             t = JSON.parseObject(paramJson, paramCls);

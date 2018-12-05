@@ -35,7 +35,9 @@ public class JedisUtil {
     }
 
     public static Jedis getJedis() {
-        return JEDIS_POOL.getResource();
+        Jedis resource = JEDIS_POOL.getResource();
+        resource.auth(PropertiesUtil.getProperty("redis.password"));
+        return resource;
     }
 
 
